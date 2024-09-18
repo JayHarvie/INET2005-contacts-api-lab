@@ -1,6 +1,20 @@
 import express from 'express';
+import multer from 'multer';
 
 const router = express.Router();
+
+// Multersetup
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/images/'); // save uploaded files in `public/images` folder
+    },
+    filename: function (req, file, cb) {
+        const ext = file.originalname.split('.').pop();// get file extension
+        const uniqueFilename = Date.now() + '-' + Math.round(Math.random() * 1000) + '.' + ext; // generate unique filename - current timestamp + random number between 0 and 1000.
+        cb(null, uniqueFilename);
+    }
+});
+const upload = multer({ storage: storage});
 
 router.get('/', (req, res) => {
   res.send('Contacts route with an automatic update');
@@ -20,15 +34,28 @@ router.get('/:id', (req, res) => {
 // to-do: add post, put, and delete routers
 
 // creating a post router
-router.post('/create/:id', (req, res) => {
-    const id = req.params.id;
-    res.send("Creating contact id: " + id);
+router.post('/create', upload.single('image'), (req, res) => {
+    const { firstName, lastName, phone, email } = req.body;
+    const fileName = req.file ? req.file.filename : null;
+
+    const contact = {
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email,
+        fileName: fileName
+    }
+
+    res.json(contact);
 });
 
 // creating an update router
-router.put('/update/:id', (req, res) => {
+router.put('/update/:id', upload.single('image'), (req, res) => {
     const id = req.params.id;
-    res.send("Updating contact id: " + id);
+
+    if (req.file) {
+        console.log('file uploaded' + req.file.filename);
+    }
 });
 
 // creating a delete router
