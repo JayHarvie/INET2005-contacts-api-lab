@@ -43,7 +43,7 @@ router.get('/:id', (req, res) => {
 // creating a post router
 router.post('/create', upload.single('image'), async (req, res) => {
     const { firstName, lastName, phone, email, title } = req.body;
-    const fileName = req.file ? req.file.filename : '';
+    const fileName = req.file ? req.file.filename : null;
 
     // validate inputs
     if(!firstName || !lastName || !phone || !email) {
@@ -69,9 +69,21 @@ router.post('/create', upload.single('image'), async (req, res) => {
 router.put('/update/:id', upload.single('image'), (req, res) => {
     const id = req.params.id;
 
-    if (req.file) {
-        console.log('file uploaded' + req.file.filename);
-    }
+    // capture inputs
+
+    // validate the id
+
+    // validate the required fields
+
+    // Find the contact by id (if not found, return 404)
+
+    // store filename in a variable
+
+    // if file was uploaded, save that filename, and delete the old file. if not, save the old filename
+
+    // update the database record with prisma (saving either the old or new filename)
+
+    res.send('Udate a contact by ' + id);
 });
 
 // creating a delete router
