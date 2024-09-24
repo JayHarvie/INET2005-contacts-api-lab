@@ -89,6 +89,15 @@ router.put('/update/:id', upload.single('image'), (req, res) => {
 // creating a delete router
 router.delete('/delete/:id', (req, res) => {
     const id = req.params.id;
+
+    // verify :id is a number
+
+    // Find the contact by id (if not found, return 404)
+
+    // delete the record with prisma
+
+    // delete the file (if contact has one)
+
     res.send("Deleting contact id: " + id);
     
 });
