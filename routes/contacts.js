@@ -21,8 +21,10 @@ router.get('/', (req, res) => {
 });
 
 // Get all contacts
-router.get('/all', (req, res) => {
-    res.send('All contacts');
+router.get('/all', async (req, res) => {
+    const contacts = await Prisma.contact.findMany();
+
+    res.send(contacts);
 });
   
 // Get a contact by id
@@ -34,17 +36,20 @@ router.get('/:id', (req, res) => {
 // to-do: add post, put, and delete routers
 
 // creating a post router
-router.post('/create', upload.single('image'), (req, res) => {
-    const { firstName, lastName, phone, email } = req.body;
+router.post('/create', upload.single('image'), async (req, res) => {
+    const { firstName, lastName, phone, email, title } = req.body;
     const fileName = req.file ? req.file.filename : null;
 
-    const contact = {
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        email: email,
-        fileName: fileName
-    }
+    const contact = await Prisma.contact.create({
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+            title: title,
+            phone: phone,
+            email: email,
+            filename:fileName
+        }
+    });
 
     res.json(contact);
 });
