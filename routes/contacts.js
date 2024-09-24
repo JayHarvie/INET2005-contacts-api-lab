@@ -40,6 +40,12 @@ router.post('/create', upload.single('image'), async (req, res) => {
     const { firstName, lastName, phone, email, title } = req.body;
     const fileName = req.file ? req.file.filename : null;
 
+    // validate inputs
+    if(!firstName || !lastName || !phone || !email) {
+        res.status(400).send('Required fields must have a value.');
+        return;
+    }
+
     const contact = await Prisma.contact.create({
         data: {
             firstName: firstName,
