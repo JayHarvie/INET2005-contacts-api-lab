@@ -1,5 +1,6 @@
 import express from 'express';
 import multer from 'multer';
+import { PrismaClient } from '@prisma/client';
 
 const router = express.Router();
 
@@ -16,6 +17,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage});
 
+const prisma = new PrismaClient({
+    log: ['query', 'info', 'warn', 'error'],
+});
+    
 router.get('/', (req, res) => {
   res.send('Contacts route with an automatic update');
 });
@@ -38,7 +43,7 @@ router.get('/:id', (req, res) => {
 // creating a post router
 router.post('/create', upload.single('image'), async (req, res) => {
     const { firstName, lastName, phone, email, title } = req.body;
-    const fileName = req.file ? req.file.filename : null;
+    const fileName = req.file ? req.file.filename : '';
 
     // validate inputs
     if(!firstName || !lastName || !phone || !email) {
@@ -46,7 +51,7 @@ router.post('/create', upload.single('image'), async (req, res) => {
         return;
     }
 
-    const contact = await Prisma.contact.create({
+    const contact = await prisma.contact.create({
         data: {
             firstName: firstName,
             lastName: lastName,

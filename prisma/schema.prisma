@@ -21,6 +21,6 @@ model Contact {
   title      String? // ? makes nullable or optional
   email      String
   phone      String?
-  filename   String // to-do make this field nullable
+  filename   String? // to-do make this field nullable
   createdAt  DateTime @default(now())
 }
